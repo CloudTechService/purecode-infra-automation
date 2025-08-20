@@ -29,6 +29,12 @@
       "profile": "sandbox",
       "role_name": "CrossAccountAccessFromPurecode",
       "description": "Sandbox environment account"
+    },
+    "qa": {
+      "account_id": "076385630916",
+      "profile": "QA",
+      "role_name": "CrossAccountAccessFromPurecode",
+      "description": "QA environment account"
     }
   },
   "source_profile": "cross-account-admin",
