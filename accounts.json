@@ -1,0 +1,36 @@
+{
+  "accounts": {
+    "data-analyst": {
+      "account_id": "093254158936",
+      "profile": "data-analyst",
+      "role_name": "CrossAccountAccessFromPurecode",
+      "description": "Data Analyst environment account"
+    },
+    "demo": {
+      "account_id": "779846783124",
+      "profile": "demo", 
+      "role_name": "CrossAccountAccessFromPurecode",
+      "description": "Demo environment account"
+    },
+    "iha-account-root": {
+      "account_id": "905418041725",
+      "profile": "iha-account-root",
+      "role_name": "CrossAccountAccessFromPurecode", 
+      "description": "IHA Account Root environment"
+    },
+    "purecode": {
+      "account_id": "833227482620",
+      "profile": "purecode",
+      "role_name": "CrossAccountAccessFromPurecode",
+      "description": "Purecode main account"
+    },
+    "sandbox": {
+      "account_id": "664418970145", 
+      "profile": "sandbox",
+      "role_name": "CrossAccountAccessFromPurecode",
+      "description": "Sandbox environment account"
+    }
+  },
+  "source_profile": "cross-account-admin",
+  "default_region": "us-east-2"
+}
