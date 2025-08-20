@@ -1,2 +1,3 @@
 # Ignore all Terragrunt cache directories
 **/.terragrunt-cache/
+**/.terraform.lock.hcl
