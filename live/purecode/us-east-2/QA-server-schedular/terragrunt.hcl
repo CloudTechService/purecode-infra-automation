@@ -68,6 +68,22 @@ inputs = {
     ACCOUNT_ID  = local.account_id
   }
 
+  # Lambda function configuration
+  lambda_timeout     = 300
+  lambda_memory_size = 256
+  log_level          = "INFO"
+  
+  # Schedule configuration (using cron expressions)
+  start_schedule = "cron(15 2 ? * MON-FRI *)"    # 2:15 AM UTC Mon-Fri (8 AM NPT Mon-Fri)
+  stop_schedule  = "cron(15 19 ? * MON-FRI *)"   # 7:15 PM UTC Mon-Fri (1 AM NPT next day)
+  schedules_enabled = true
+  
+  # TODO: Update with actual EC2 instance IDs for this account
+  instance_ids = [
+    "i-1234567890abcdef0",
+    "i-0987654321fedcba0"
+  ]
+
   # Instance IDs to manage (TODO: Update with actual instance IDs)
   instance_ids = local.account_vars.locals.instance_ids
 

@@ -16,8 +16,8 @@ locals {
   log_level          = "INFO"
   
   # Schedule configuration (using cron expressions)
-  start_schedule    = "cron(0 8 * * ? *)"   # 8 AM UTC daily
-  stop_schedule     = "cron(0 1 * * ? *)"   # 1 AM UTC daily
+  start_schedule = "cron(15 2 ? * MON-FRI *)"    # 2:15 AM UTC Mon-Fri (8 AM NPT Mon-Fri)
+  stop_schedule  = "cron(15 19 ? * MON-FRI *)"   # 7:15 PM UTC Mon-Fri (1 AM NPT next day)
   schedules_enabled = true
   
   # TODO: Update with actual EC2 instance IDs for this account
