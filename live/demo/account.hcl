@@ -10,9 +10,10 @@ locals {
   account_id   = local.accounts_config.accounts[local.account_name].account_id
   profile      = local.accounts_config.accounts[local.account_name].profile
   
-  # Lambda function configuration
-  lambda_timeout     = 300
-  lambda_memory_size = 256
-  log_level          = "INFO"
-  
+  # Account-specific tags
+  account_tags = {
+    AccountName = local.account_name
+    AccountId   = local.account_id
+    Department  = "Demo Environment"
+  }
 }

@@ -9,22 +9,7 @@ locals {
   account_name = "data-analyst"
   account_id   = local.accounts_config.accounts[local.account_name].account_id
   profile      = local.accounts_config.accounts[local.account_name].profile
-  
-  # Lambda function configuration
-  lambda_timeout     = 300
-  lambda_memory_size = 256
-  log_level          = "INFO"
-  
-  # Schedule configuration (using cron expressions)
-  start_schedule = "cron(15 2 ? * MON-FRI *)"    # 2:15 AM UTC Mon-Fri (8 AM NPT Mon-Fri)
-  stop_schedule  = "cron(15 19 ? * MON-FRI *)"   # 7:15 PM UTC Mon-Fri (1 AM NPT next day)
-  
-  # TODO: Update with actual EC2 instance IDs for this account
-  instance_ids = [
-    "i-1234567890abcdef0",
-    "i-0987654321fedcba0"
-  ]
-  
+    
   # Account-specific tags
   account_tags = {
     AccountName = local.account_name

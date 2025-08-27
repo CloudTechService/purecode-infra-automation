@@ -23,6 +23,10 @@ locals {
   account_id   = local.accounts_config.accounts[local.account_name].account_id
   aws_region   = local.region_vars.locals.aws_region
   
+  # Individual schedule control - MODIFY THESE AS NEEDED
+  start_enabled = true   # Set to false to disable start schedule
+  stop_enabled  = false  # Set to false to disable stop schedule
+
   # Merge tags from all levels
   merged_tags = merge(
     local.common_vars.locals.common_tags,
@@ -35,63 +39,54 @@ locals {
 }
 
 inputs = {
-  # Environment configuration
+  # Environment setup
   environment = local.account_name
   aws_region  = local.aws_region
   aws_profile = local.accounts_config.accounts[local.account_name].profile
 
-  # Existing IAM role from accounts.json
+  # IAM Role from accounts.json
   existing_role_name = local.accounts_config.accounts[local.account_name].role_name
 
-  # Lambda function configuration
+  # Lambda function config
   function_name_prefix = "${local.common_vars.locals.name_prefix}-${local.account_name}"
   start_function_name  = "${local.common_vars.locals.name_prefix}-${local.account_name}-start"
   stop_function_name   = "${local.common_vars.locals.name_prefix}-${local.account_name}-stop"
   start_description    = "Start QA Server instances for ${local.accounts_config.accounts[local.account_name].description}"
   stop_description     = "Stop QA Server instances for ${local.accounts_config.accounts[local.account_name].description}"
 
-  # Lambda runtime configuration from account-specific settings
+  # Runtime config (fixed defaults)
   runtime     = local.common_vars.locals.lambda_runtime
   handler     = local.common_vars.locals.lambda_handler
-  timeout     = local.account_vars.locals.lambda_timeout
-  memory_size = local.account_vars.locals.lambda_memory_size
 
-  # Lambda source code paths
+  # Lambda source code
   start_source_path = "${get_terragrunt_dir()}/start_lambda_function.py"
   stop_source_path  = "${get_terragrunt_dir()}/stop_lambda_function.py"
 
-  # Environment variables for Lambda
+  # Environment variables
   environment_variables = {
     ENVIRONMENT = local.account_name
-    LOG_LEVEL   = local.account_vars.locals.log_level
+    LOG_LEVEL   = try(local.account_vars.locals.log_level, "INFO")
     REGION      = local.aws_region
     ACCOUNT_ID  = local.account_id
   }
 
-  # Lambda function configuration
+  # Lambda-specific overrides
   lambda_timeout     = 300
   lambda_memory_size = 256
   log_level          = "INFO"
-  
-  # Schedule configuration (using cron expressions)
-  start_schedule = "cron(15 2 ? * MON-FRI *)"    # 2:15 AM UTC Mon-Fri (8 AM NPT Mon-Fri)
-  stop_schedule  = "cron(15 19 ? * MON-FRI *)"   # 7:15 PM UTC Mon-Fri (1 AM NPT next day)
-  schedules_enabled = true
-  
-  # TODO: Update with actual EC2 instance IDs for this account
-  instance_ids = [
-    "i-1234567890abcdef0",
-    "i-0987654321fedcba0"
-  ]
-
-  # Instance IDs to manage (TODO: Update with actual instance IDs)
-  instance_ids = local.account_vars.locals.instance_ids
 
   # Schedule configuration
-  start_schedule     = local.account_vars.locals.start_schedule
-  stop_schedule      = local.account_vars.locals.stop_schedule
-  schedules_enabled  = local.account_vars.locals.schedules_enabled
+  start_schedule     = "cron(15 2 ? * MON-FRI *)"   # 2:15 AM UTC
+  stop_schedule      = "cron(15 19 ? * MON-FRI *)"  # 7:15 PM UTC
+  start_enabled     = local.start_enabled          # Individual control for start schedule
+  stop_enabled      = local.stop_enabled           # Individual control for stop schedule
 
-  # Use merged tags
+  # Instance IDs
+  instance_ids = try(local.account_vars.locals.instance_ids, [
+    "i-1234567890abcdef0",
+    "i-0987654321fedcba0"
+  ])
+
+  # Tags
   tags = local.merged_tags
 }
