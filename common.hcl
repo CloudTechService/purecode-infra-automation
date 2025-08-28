@@ -9,13 +9,13 @@ locals {
   accounts_config = jsondecode(file("${get_parent_terragrunt_dir()}/accounts.json"))  
   
   # TODO: Enter a unique name prefix to set for all resources created in your accounts
-  name_prefix = "qa-scheduler"
+  name_prefix = "purecode"
   
   # TODO: Enter the default AWS region, the same as where the terraform state S3 bucket is currently provisioned
   default_region = local.accounts_config.default_region
   
   # Project-specific configurations
-  project_name = "QA-Server-Scheduler"
+  project_name = "Purecode"
   
   # Common resource configurations
   lambda_runtime = "python3.9"
@@ -23,7 +23,7 @@ locals {
   
   # Common tags applied to all resources
   common_tags = {
-    Project     = "QA-Server-Scheduler"
+    Project     = "Purecode"
     ManagedBy   = "Terragrunt"
     Owner       = "DevOps-Team"
     Environment = "multi-account"
