@@ -22,12 +22,17 @@ output "stop_lambda_function_name" {
 
 output "lambda_role_arn" {
   description = "ARN of the Lambda IAM role"
-  value       = data.aws_iam_role.existing_lambda_role.arn
+  value       = aws_iam_role.lambda_execution_role.arn
 }
 
 output "lambda_role_name" {
   description = "Name of the Lambda IAM role"
-  value       = data.aws_iam_role.existing_lambda_role.name
+  value       = aws_iam_role.lambda_execution_role.name
+}
+
+output "lambda_policy_arn" {
+  description = "ARN of the Lambda IAM policy"
+  value       = aws_iam_policy.lambda_ec2_policy.arn
 }
 
 output "start_schedule_rule_name" {

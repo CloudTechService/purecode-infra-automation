@@ -9,7 +9,7 @@ locals {
   accounts_config = jsondecode(file("${get_parent_terragrunt_dir()}/accounts.json"))  
   
   # TODO: Enter a unique name prefix to set for all resources created in your accounts
-  name_prefix = "purecode"
+  name_prefix = "infra"
   
   # TODO: Enter the default AWS region, the same as where the terraform state S3 bucket is currently provisioned
   default_region = local.accounts_config.default_region

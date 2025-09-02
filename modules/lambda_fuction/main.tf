@@ -13,9 +13,51 @@ data "archive_file" "stop_lambda_zip" {
   output_path = "${path.module}/stop_lambda_function.zip"
 }
 
-# Use existing IAM role
-data "aws_iam_role" "existing_lambda_role" {
-  name = var.existing_role_name
+# Read the Lambda EC2 policy from JSON file
+data "local_file" "lambda_ec2_policy" {
+  filename = "${path.module}/policies/lambda_ec2_policy.json"
+}
+
+# IAM Trust Policy for Lambda
+data "aws_iam_policy_document" "lambda_trust_policy" {
+  statement {
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
+    }
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+# Create IAM Role for Lambda function
+resource "aws_iam_role" "lambda_execution_role" {
+  name               = "server-schedular-lambda-execution-role"
+  assume_role_policy = data.aws_iam_policy_document.lambda_trust_policy.json
+  description        = "IAM role for Lambda functions to manage EC2 instances"
+
+  tags = var.tags
+}
+
+# Create IAM Policy from JSON file
+resource "aws_iam_policy" "lambda_ec2_policy" {
+  name        = "server-schedular-lambda-ec2-policy"
+  description = "Policy for Lambda functions to manage EC2 instances"
+  policy      = data.local_file.lambda_ec2_policy.content
+
+  tags = var.tags
+}
+
+# Attach the custom EC2 policy to the Lambda role
+resource "aws_iam_role_policy_attachment" "lambda_ec2_policy_attachment" {
+  role       = aws_iam_role.lambda_execution_role.name
+  policy_arn = aws_iam_policy.lambda_ec2_policy.arn
+}
+
+# Attach AWS managed policy for basic Lambda execution
+resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
+  role       = aws_iam_role.lambda_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
 # CloudWatch Log Groups for Lambda functions
@@ -35,7 +77,7 @@ resource "aws_cloudwatch_log_group" "stop_lambda_logs" {
 resource "aws_lambda_function" "start_scheduler" {
   filename         = data.archive_file.start_lambda_zip.output_path
   function_name    = var.start_function_name
-  role            = data.aws_iam_role.existing_lambda_role.arn
+  role            = aws_iam_role.lambda_execution_role.arn
   handler         = var.handler
   source_code_hash = data.archive_file.start_lambda_zip.output_base64sha256
   runtime         = var.runtime
@@ -54,6 +96,8 @@ resource "aws_lambda_function" "start_scheduler" {
 
   depends_on = [
     aws_cloudwatch_log_group.start_lambda_logs,
+    aws_iam_role_policy_attachment.lambda_ec2_policy_attachment,
+    aws_iam_role_policy_attachment.lambda_basic_execution,
   ]
 
   tags = var.tags
@@ -63,7 +107,7 @@ resource "aws_lambda_function" "start_scheduler" {
 resource "aws_lambda_function" "stop_scheduler" {
   filename         = data.archive_file.stop_lambda_zip.output_path
   function_name    = var.stop_function_name
-  role            = data.aws_iam_role.existing_lambda_role.arn
+  role            = aws_iam_role.lambda_execution_role.arn
   handler         = var.handler
   source_code_hash = data.archive_file.stop_lambda_zip.output_base64sha256
   runtime         = var.runtime
@@ -82,6 +126,8 @@ resource "aws_lambda_function" "stop_scheduler" {
 
   depends_on = [
     aws_cloudwatch_log_group.stop_lambda_logs,
+    aws_iam_role_policy_attachment.lambda_ec2_policy_attachment,
+    aws_iam_role_policy_attachment.lambda_basic_execution,
   ]
 
   tags = var.tags
@@ -89,7 +135,7 @@ resource "aws_lambda_function" "stop_scheduler" {
 
 # CloudWatch Event Rule for starting instances
 resource "aws_cloudwatch_event_rule" "start_schedule" {
-  name                = "${var.function_name_prefix}-start"
+  name                = "server-schedular-start"
   description         = "Start QA servers for ${var.environment} environment"
   schedule_expression = var.start_schedule
   state              = var.schedules_enabled ? "ENABLED" : "DISABLED"
@@ -99,7 +145,7 @@ resource "aws_cloudwatch_event_rule" "start_schedule" {
 
 # CloudWatch Event Rule for stopping instances
 resource "aws_cloudwatch_event_rule" "stop_schedule" {
-  name                = "${var.function_name_prefix}-stop"
+  name                = "server-schedular-stop"
   description         = "Stop QA servers for ${var.environment} environment"
   schedule_expression = var.stop_schedule
   state              = var.schedules_enabled ? "ENABLED" : "DISABLED"

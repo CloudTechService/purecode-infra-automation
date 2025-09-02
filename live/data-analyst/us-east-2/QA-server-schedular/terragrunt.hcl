@@ -40,8 +40,6 @@ locals {
 inputs = {
   # Environment configuration
   environment = local.account_name
-  aws_region  = local.aws_region
-  aws_profile = local.accounts_config.accounts[local.account_name].profile
 
   # Existing IAM role from accounts.json
   existing_role_name = local.accounts_config.accounts[local.account_name].role_name

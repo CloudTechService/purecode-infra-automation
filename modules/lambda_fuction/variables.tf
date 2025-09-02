@@ -6,11 +6,6 @@ variable "aws_profile" {
   default     = "default"
 }
 
-variable "existing_role_name" {
-  description = "Name of the existing IAM role for Lambda function"
-  type        = string
-}
-
 variable "environment" {
   description = "Environment name"
   type        = string

@@ -41,16 +41,14 @@ locals {
 inputs = {
   # Environment setup
   environment = local.account_name
-  aws_region  = local.aws_region
-  aws_profile = local.accounts_config.accounts[local.account_name].profile
 
   # IAM Role from accounts.json
   existing_role_name = local.accounts_config.accounts[local.account_name].role_name
 
   # Lambda function config
-  function_name_prefix = "${local.common_vars.locals.name_prefix}-${local.account_name}"
-  start_function_name  = "${local.common_vars.locals.name_prefix}-${local.account_name}-start"
-  stop_function_name   = "${local.common_vars.locals.name_prefix}-${local.account_name}-stop"
+  function_name_prefix = "server-schedular-${local.account_name}"
+  start_function_name  = "server-schedular-${local.account_name}-start"
+  stop_function_name   = "server-schedular-${local.account_name}-stop"
   start_description    = "Start QA Server instances for ${local.accounts_config.accounts[local.account_name].description}"
   stop_description     = "Stop QA Server instances for ${local.accounts_config.accounts[local.account_name].description}"
 
