@@ -54,11 +54,11 @@ resource "aws_iam_role_policy_attachment" "lambda_ec2_policy_attachment" {
   policy_arn = aws_iam_policy.lambda_ec2_policy.arn
 }
 
-# Attach AWS managed policy for basic Lambda execution
-resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
-  role       = aws_iam_role.lambda_execution_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-}
+# # Attach AWS managed policy for basic Lambda execution
+# resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
+#   role       = aws_iam_role.lambda_execution_role.name
+#   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+# }
 
 # CloudWatch Log Groups for Lambda functions
 resource "aws_cloudwatch_log_group" "start_lambda_logs" {
