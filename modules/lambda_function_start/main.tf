@@ -1,5 +1,8 @@
 # modules/lambda_function_start/main.tf
 
+# Fetch the current AWS region
+data "aws_region" "current" {}
+
 # Data source for Lambda function zip file
 data "archive_file" "lambda_zip" {
   type        = "zip"
