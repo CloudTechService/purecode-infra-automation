@@ -42,7 +42,7 @@ inputs = {
   # Lambda configuration
   source_path = "${get_terragrunt_dir()}/start_lambda_function.py"
   runtime     = local.common_vars.locals.lambda_runtime
-  handler     = local.common_vars.locals.lambda_handler
+  handler     = "start_lambda_function.lambda_handler"
   timeout     = 300
   memory_size = 256
   
