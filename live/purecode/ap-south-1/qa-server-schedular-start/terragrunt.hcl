@@ -48,7 +48,8 @@ inputs = {
   
   # Schedule configuration
   schedule_enabled    = true  # Set to false to disable this scheduler
-  schedule_expression = "cron(15 9 ? * MON-FRI *)"  # 2:15 AM UTC
+  # schedule_expression = "cron(15 9 ? * MON-FRI *)"  # 2:15 AM UTC
+  schedule_expression = "cron(0 9 ? * MON-FRI *)"  # 2:15 AM UTC
   log_retention_days  = 14
   
   # Instance IDs
