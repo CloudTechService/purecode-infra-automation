@@ -1,11 +1,11 @@
-# live/purecode/ap-south-1/qa-server-schedular-start/terragrunt.hcl
+# live/purecode/us-east-1/qa-server-schedular-stop/terragrunt.hcl
 
 include "root" {
   path = find_in_parent_folders()
 }
 
 terraform {
-  source = "../../../../modules//lambda_function_start"
+  source = "../../../../modules//lambda_function_stop"
 }
 
 # Read configuration from parent folders
@@ -28,36 +28,32 @@ locals {
     local.account_vars.locals.account_tags,
     local.region_vars.locals.region_tags,
     {
-      Service = "QA-Server-Start-Scheduler"
+      Service = "QA-Server-Stop-Scheduler"
     }
   )
 }
 
 inputs = {
   # Function configuration
-  function_name = "${local.common_vars.locals.name_prefix}-${local.account_name}-start-function"
-  description   = "Start QA Server instances for ${local.accounts_config.accounts[local.account_name].description}"
+  function_name = "${local.common_vars.locals.name_prefix}-${local.account_name}-stop-function"
+  description   = "Stop QA Server instances for ${local.accounts_config.accounts[local.account_name].description}"
   environment   = local.account_name
   
   # Lambda configuration
-  source_path = "${get_terragrunt_dir()}/start_lambda_function.py"
+  source_path = "${get_terragrunt_dir()}/stop_lambda_function.py"
   runtime     = local.common_vars.locals.lambda_runtime
-  handler     = "start_lambda_function.lambda_handler"
+  handler     = "stop_lambda_function.lambda_handler"
   timeout     = 300
   memory_size = 256
   
   # Schedule configuration
   schedule_enabled    = true  # Set to false to disable this scheduler
-  schedule_expression = "cron(15 3 ? * MON-FRI *)"  # 9:00 AM NPT (3:15 AM UTC)
+  schedule_expression = "cron(15 20 ? * SUN-THU *)"  # 2:00 AM NPT (8:15 PM UTC)
   log_retention_days  = 14
   
   # Instance IDs
   instance_ids = join(",", try(local.account_vars.locals.instance_ids, [
-    "i-0a829b5eebcff82ad",
-    "i-0674849cd5a7ece14",
-    "i-0277133d6315d72c0",
-    "i-0fbcf1e18608485fb",
-    "i-0126a5b451224737a"
+    "i-08dc4e443d1a13597"
   ]))
 
   # Environment variables

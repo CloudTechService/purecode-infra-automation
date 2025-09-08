@@ -48,12 +48,17 @@ inputs = {
   
   # Schedule configuration
   schedule_enabled    = true  # Set to false to disable this scheduler
-  schedule_expression = "cron(15 2 ? * MON-FRI *)"  # 2:15 AM UTC
+  schedule_expression = "cron(15 3 ? * MON-FRI *)"  # 9:00 AM NPT (3:15 AM UTC)
   log_retention_days  = 14
   
   # Instance IDs
   instance_ids = join(",", try(local.account_vars.locals.instance_ids, [
-    "i-07a59db3128835cfb"
+    "i-05e00988804cfe568",
+    "i-084351d0eebaed69e",
+    "i-0b2f76f6bcba7454d",
+    "i-02fb26cba999a11c4",
+    "i-0d13521693fb6cae2",
+    "i-05dfd13a1afa44d71"
   ]))
 
   # Environment variables

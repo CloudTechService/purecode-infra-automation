@@ -1,4 +1,4 @@
-# live/purecode/ap-south-1/qa-server-schedular-start/terragrunt.hcl
+# live/purecode/us-east-1/qa-server-schedular-start/terragrunt.hcl
 
 include "root" {
   path = find_in_parent_folders()
@@ -53,11 +53,7 @@ inputs = {
   
   # Instance IDs
   instance_ids = join(",", try(local.account_vars.locals.instance_ids, [
-    "i-0a829b5eebcff82ad",
-    "i-0674849cd5a7ece14",
-    "i-0277133d6315d72c0",
-    "i-0fbcf1e18608485fb",
-    "i-0126a5b451224737a"
+    "i-08dc4e443d1a13597"
   ]))
 
   # Environment variables
