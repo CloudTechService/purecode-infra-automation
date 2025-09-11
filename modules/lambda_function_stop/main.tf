@@ -29,7 +29,7 @@ data "aws_iam_policy_document" "lambda_trust_policy" {
 
 # Create IAM Role for Lambda function
 resource "aws_iam_role" "lambda_execution_role" {
-  name_prefix        = "${var.function_name}-${data.aws_region.current.name}-execution-role"
+  name               = "${var.function_name}-${data.aws_region.current.name}-execution-role"
   assume_role_policy = data.aws_iam_policy_document.lambda_trust_policy.json
   description        = "IAM role for Stop Lambda function to manage EC2 instances"
 
