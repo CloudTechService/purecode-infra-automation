@@ -1,4 +1,4 @@
-# live/sandbox/us-east-2/region.hcl
+# live/QA/us-east-2/region.hcl
 # Region-specific configuration for us-east-2
 
 locals {

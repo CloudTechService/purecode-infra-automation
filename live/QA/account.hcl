@@ -1,4 +1,4 @@
-# live/purecode/account.hcl
+# live/QA/account.hcl
 # Account-specific configuration for purecode environment
 
 locals {
