@@ -45,29 +45,28 @@ resource "aws_internet_gateway" "internet_gateway" {
   })
 }
 
-# Elastic IPs for NAT Gateways
+# Single Elastic IP for NAT Gateway
 resource "aws_eip" "nat_eip" {
-  for_each = { for idx, subnet in aws_subnet.public_subnet : idx => subnet }
+  domain = "vpc"
 
-  # associate directly to NAT gateway later
   tags = merge(var.tags, {
-    Name = "${var.env}-nat-eip-${each.key + 1}"
+    Name = "${var.env}-nat-eip"
   })
+
+  depends_on = [aws_internet_gateway.internet_gateway]
 }
 
-
-# NAT Gateways
+# Single NAT Gateway (in first public subnet)
 resource "aws_nat_gateway" "nat_gateway" {
-  for_each = { for idx, subnet in aws_subnet.public_subnet : idx => subnet }
-
-  allocation_id = aws_eip.nat_eip[each.key].id
-  subnet_id     = each.value.id
+  allocation_id = aws_eip.nat_eip.id
+  subnet_id     = aws_subnet.public_subnet[0].id
 
   tags = merge(var.tags, {
-    Name = "${var.env}-nat-${each.key + 1}"
+    Name = "${var.env}-nat"
   })
-}
 
+  depends_on = [aws_internet_gateway.internet_gateway]
+}
 
 # Public Route Table
 resource "aws_route_table" "public_rt" {
@@ -83,32 +82,32 @@ resource "aws_route_table" "public_rt" {
   })
 }
 
-# Private Route Tables
+# Single Private Route Table (all private subnets use same NAT)
 resource "aws_route_table" "private_rt" {
-  for_each = aws_subnet.private_subnet
-
   vpc_id = aws_vpc.vpc.id
 
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat_gateway[each.key].id
+    nat_gateway_id = aws_nat_gateway.nat_gateway.id
   }
 
   tags = merge(var.tags, {
-    Name = "${var.env}-private-rt-${each.key + 1}"
+    Name = "${var.env}-private-rt"
   })
 }
 
 # Associate Public Route Table
 resource "aws_route_table_association" "public_rta" {
   for_each = aws_subnet.public_subnet
+  
   subnet_id      = each.value.id
   route_table_id = aws_route_table.public_rt.id
 }
 
-# Associate Private Route Table
+# Associate Private Route Table (all private subnets to same route table)
 resource "aws_route_table_association" "private_rta" {
   for_each = aws_subnet.private_subnet
+  
   subnet_id      = each.value.id
-  route_table_id = aws_route_table.private_rt[each.key].id
+  route_table_id = aws_route_table.private_rt.id
 }

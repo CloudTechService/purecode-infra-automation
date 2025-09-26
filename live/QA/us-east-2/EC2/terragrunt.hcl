@@ -14,11 +14,16 @@ inputs = {
   vpc_id             = dependency.vpc.outputs.vpc_id
   region             = "us-east-2"
   env                = "qa"
-  subnets            = {
-    (dependency.vpc.outputs.public_subnet_ids[0])  = 1
-    (dependency.vpc.outputs.public_subnet_ids[1])  = 0
-    (dependency.vpc.outputs.private_subnet_ids[0]) = 0
-    (dependency.vpc.outputs.private_subnet_ids[1]) = 0
+ subnets = {
+    # Public Subnets
+    (dependency.vpc.outputs.public_subnet_ids[0])  = 1  # 10.71.4.0/24 - 1 instance
+    (dependency.vpc.outputs.public_subnet_ids[1])  = 0  # 10.71.5.0/24 - 0 instances
+    (dependency.vpc.outputs.public_subnet_ids[2])  = 0  # 10.71.6.0/24 - 0 instances
+    
+    # Private Subnets  
+    (dependency.vpc.outputs.private_subnet_ids[0]) = 0  # 10.71.1.0/24 - 0 instances
+    (dependency.vpc.outputs.private_subnet_ids[1]) = 0  # 10.71.2.0/24 - 0 instances
+    (dependency.vpc.outputs.private_subnet_ids[2]) = 0  # 10.71.3.0/24 - 0 instances
   }
   public_subnet_ids  = dependency.vpc.outputs.public_subnet_ids
   ami_id             = "ami-0cfde0ea8edd312d4"
