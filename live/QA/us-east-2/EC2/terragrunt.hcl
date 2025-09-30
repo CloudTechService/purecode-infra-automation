@@ -16,21 +16,22 @@ inputs = {
   env                = "qa"
  subnets = {
     # Public Subnets
-    (dependency.vpc.outputs.public_subnet_ids[0])  = 1  # 10.71.4.0/24 - 1 instance
-    (dependency.vpc.outputs.public_subnet_ids[1])  = 0  # 10.71.5.0/24 - 0 instances
-    (dependency.vpc.outputs.public_subnet_ids[2])  = 0  # 10.71.6.0/24 - 0 instances
+    (dependency.vpc.outputs.public_subnets[0])  = 1  # 10.71.4.0/24 - 1 instance
+    (dependency.vpc.outputs.public_subnets[1])  = 0  # 10.71.5.0/24 - 0 instances
+    (dependency.vpc.outputs.public_subnets[2])  = 0  # 10.71.6.0/24 - 0 instances
     
     # Private Subnets  
-    (dependency.vpc.outputs.private_subnet_ids[0]) = 0  # 10.71.1.0/24 - 0 instances
-    (dependency.vpc.outputs.private_subnet_ids[1]) = 0  # 10.71.2.0/24 - 0 instances
-    (dependency.vpc.outputs.private_subnet_ids[2]) = 0  # 10.71.3.0/24 - 0 instances
+    (dependency.vpc.outputs.private_subnets[0]) = 0  # 10.71.1.0/24 - 0 instances
+    (dependency.vpc.outputs.private_subnets[1]) = 0  # 10.71.2.0/24 - 0 instances
+    (dependency.vpc.outputs.private_subnets[2]) = 0  # 10.71.3.0/24 - 0 instances
   }
-  public_subnet_ids  = dependency.vpc.outputs.public_subnet_ids
+  public_subnet_ids  = dependency.vpc.outputs.public_subnets
   ami_id             = "ami-0cfde0ea8edd312d4"
   instance_type      = "t3.micro"
   key_name           = "qa-keypair"
   ssh_allowed_cidrs  = ["10.71.4.0/24"]
   http_allowed_cidrs = ["0.0.0.0/0"]
+  enable_detailed_monitoring = false  # Set to true for production
   tags = {
     Project = "Purecode-QA"
     Owner   = "QA Team"

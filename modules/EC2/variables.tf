@@ -60,3 +60,21 @@ variable "vpc_id" {
   type        = string
   description = "VPC ID where EC2 instances will be deployed"
 }
+
+variable "enable_detailed_monitoring" {
+  description = "Enable detailed monitoring for EC2 instances"
+  type        = bool
+  default     = false
+}
+
+variable "cpu_core_count" {
+  description = "Number of CPU cores"
+  type        = number
+  default     = null
+}
+
+variable "cpu_threads_per_core" {
+  description = "Number of threads per CPU core"
+  type        = number
+  default     = null
+}
