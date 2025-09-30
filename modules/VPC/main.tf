@@ -133,20 +133,6 @@ module "vpc" {
   enable_dns_hostnames = var.enable_dns_hostnames
   enable_dns_support   = var.enable_dns_support
 
-  # # VPC Flow Logs (optional)
-  # enable_flow_log                      = var.enable_flow_log
-  # create_flow_log_cloudwatch_iam_role  = var.enable_flow_log
-  # create_flow_log_cloudwatch_log_group = var.enable_flow_log
-  # flow_log_retention_in_days           = var.flow_log_retention_in_days
-
-  # # Database subnets (optional)
-  # database_subnets             = var.database_subnets
-  # create_database_subnet_group = var.create_database_subnet_group
-
-  # # VPC Endpoints (optional)
-  # enable_s3_endpoint       = var.enable_s3_endpoint
-  # enable_dynamodb_endpoint = var.enable_dynamodb_endpoint
-
   # Tags
   tags = merge(var.tags, {
     Environment = var.env
