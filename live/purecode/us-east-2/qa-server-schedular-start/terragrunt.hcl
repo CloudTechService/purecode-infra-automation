@@ -47,7 +47,7 @@ inputs = {
   memory_size = 256
   
   # Schedule configuration
-  schedule_enabled    = false  # Set to false to disable this scheduler
+  schedule_enabled    = true  # Set to false to disable this scheduler
   schedule_expression = "cron(25 3 ? * MON-FRI *)"  # 9:10 AM NPT (3:25 AM UTC)
   log_retention_days  = 14
   
