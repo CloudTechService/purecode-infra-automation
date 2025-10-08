@@ -57,8 +57,8 @@ inputs = {
     "i-084351d0eebaed69e",
     "i-02fb26cba999a11c4",
     "i-0d13521693fb6cae2",
-    "i-05dfd13a1afa44d71",
-    "i-0e65c7687b98e11e5"
+    "i-05dfd13a1afa44d71"
+    # "i-0e65c7687b98e11e5"
   ]))
 
   # Environment variables
