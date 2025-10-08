@@ -16,6 +16,22 @@ locals {
   profile        = local.account_vars.locals.profile
 }
 
+# generate "backend" {
+#   path      = "backend.tf"
+#   if_exists = "overwrite_terragrunt"
+#   contents  = <<EOF
+# terraform {
+#   backend "s3" {
+#     bucket         = "${local.name_prefix}-${local.account_name}-${local.aws_region}-terragrunt-state"
+#     key            = "${path_relative_to_include()}/terraform.tfstate"
+#     region         = "${local.aws_region}"
+#     profile        = "${local.profile}"
+#     encrypt        = true
+#   }
+# }
+# EOF
+# }
+
 remote_state {
   backend = "s3"
 
