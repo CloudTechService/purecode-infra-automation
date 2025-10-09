@@ -55,38 +55,14 @@ locals {
   ]...)
 }
 
-# EC2 Instances using official module
-# module "ec2_instance" {
-#   source  = "terraform-aws-modules/ec2-instance/aws"
-#   version = "~> 5.7"
+#EC2 Instances using official module
+module "ec2_instance" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 5.7"
 
-#   for_each = local.ec2_instances_map
-
-#   name = "${var.env}-ec2-${each.key}"
-
-#   ami                         = var.ami_id
-#   instance_type               = var.instance_type
-#   key_name                    = var.key_name
-#   monitoring                  = var.enable_detailed_monitoring
-#   associate_public_ip_address = contains(var.public_subnet_ids, each.value)
-
-#   subnet_id              = each.value
-#   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
-
-#   # Only add cpu_options if values are provided
-#   cpu_options = var.cpu_core_count != null || var.cpu_threads_per_core != null ? {
-#     core_count       = var.cpu_core_count
-#     threads_per_core = var.cpu_threads_per_core
-#   } : null
-
-#   tags = merge(var.tags, {
-#     Name        = "${var.env}-ec2-${each.key}"
-#     Environment = var.env
-#   })
-# }
-
-resource "aws_instance" "ec2_instance" {
   for_each = local.ec2_instances_map
+
+  name = "${var.env}-ec2-${each.key}"
 
   ami                         = var.ami_id
   instance_type               = var.instance_type
@@ -97,8 +73,32 @@ resource "aws_instance" "ec2_instance" {
   subnet_id              = each.value
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
 
+  # Only add cpu_options if values are provided
+  cpu_options = var.cpu_core_count != null || var.cpu_threads_per_core != null ? {
+    core_count       = var.cpu_core_count
+    threads_per_core = var.cpu_threads_per_core
+  } : null
+
   tags = merge(var.tags, {
     Name        = "${var.env}-ec2-${each.key}"
     Environment = var.env
   })
 }
+
+# resource "aws_instance" "ec2_instance" {
+#   for_each = local.ec2_instances_map
+
+#   ami                         = var.ami_id
+#   instance_type               = var.instance_type
+#   key_name                    = var.key_name
+#   monitoring                  = var.enable_detailed_monitoring
+#   associate_public_ip_address = contains(var.public_subnet_ids, each.value)
+
+#   subnet_id              = each.value
+#   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
+
+#   tags = merge(var.tags, {
+#     Name        = "${var.env}-ec2-${each.key}"
+#     Environment = var.env
+#   })
+# }
