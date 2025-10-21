@@ -1,50 +1,34 @@
-# modules/ec2/outputs.tf
-
-output "public_servers" {
-  description = "Map of public server details"
-  value = {
-    for name, instance in aws_instance.public_servers : name => {
-      id         = instance.id
-      public_ip  = instance.public_ip
-      private_ip = instance.private_ip
-      role       = instance.tags["Role"]
-    }
-  }
+output "instance_id" {
+  description = "EC2 instance ID"
+  value       = module.ec2_instance.id
 }
 
-output "private_servers" {
-  description = "Map of private server details"
-  value = {
-    for name, instance in aws_instance.private_servers : name => {
-      id         = instance.id
-      private_ip = instance.private_ip
-      role       = instance.tags["Role"]
-    }
-  }
+output "instance_public_ip" {
+  description = "Public IP address of the EC2 instance"
+  value       = module.ec2_instance.public_ip
 }
 
-output "public_security_group_id" {
-  description = "Security group ID for public instances"
-  value       = aws_security_group.public_sg.id
+output "instance_private_ip" {
+  description = "Private IP address of the EC2 instance"
+  value       = module.ec2_instance.private_ip
 }
 
-output "private_security_group_id" {
-  description = "Security group ID for private instances"
-  value       = aws_security_group.private_sg.id
+output "instance_public_dns" {
+  description = "Public DNS name of the EC2 instance"
+  value       = module.ec2_instance.public_dns
 }
 
-output "all_server_ids" {
-  description = "List of all server IDs"
-  value = concat(
-    [for instance in aws_instance.public_servers : instance.id],
-    [for instance in aws_instance.private_servers : instance.id]
-  )
+output "security_group_id" {
+  description = "ID of the security group attached to the instance"
+  value       = aws_security_group.ec2_sg.id
 }
 
-output "all_server_names" {
-  description = "List of all server names"
-  value = concat(
-    [for name in keys(aws_instance.public_servers) : name],
-    [for name in keys(aws_instance.private_servers) : name]
-  )
+output "security_group_name" {
+  description = "Name of the security group"
+  value       = aws_security_group.ec2_sg.name
+}
+
+output "ami_id" {
+  description = "AMI ID used for the instance"
+  value       = data.aws_ami.amazon_linux.id
 }
