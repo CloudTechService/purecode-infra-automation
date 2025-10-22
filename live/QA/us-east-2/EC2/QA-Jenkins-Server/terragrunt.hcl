@@ -30,14 +30,14 @@ inputs = {
   instance_type               = "t3.micro"
   key_name                    = "qa-keypair"
   monitoring                  = true
-  subnet_id                   = "subnet-03901a162937bf164"
+  subnet_id                   = "subnet-03e3963edc989e8ac"
   associate_public_ip_address = true
 
   # Create and configure security group
   create_security_group      = true
   security_group_name        = "jenkins-server-sg"
   security_group_description = "Security group for Jenkins Server"
-  vpc_id                     = "vpc-0d9d47047a31f5f5b"
+  vpc_id                     = "vpc-0af38f56c6e9cb18c"
 
   # Allocate Elastic IP
   create_eip = true
