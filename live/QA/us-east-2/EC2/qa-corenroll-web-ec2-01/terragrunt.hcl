@@ -1,4 +1,4 @@
-# live/QA/us-east-2/EC2/QA-Jenkins-Server/terragrunt.hcl
+# live/QA/us-east-2/EC2/qa-corenroll-web-ec2-01/terragrunt.hcl
 
 include "root" {
   path = find_in_parent_folders()
@@ -21,22 +21,22 @@ generate "versions_override" {
 }
 
 inputs = {
-  name = "qa-jenkins-server"
+  name = "qa-corenroll-web-ec2-01"
 
   # AMI - Update with your desired AMI for us-east-2
   # Or use SSM parameter to get latest Amazon Linux 2023
   ami = "ami-0cfde0ea8edd312d4"  # Update this
   
-  instance_type               = "t3.micro"
+  instance_type               = "m6i.2xlarge"
   key_name                    = "qa-keypair"
   monitoring                  = false
-  subnet_id                   = "subnet-03e3963edc989e8ac"
+  subnet_id                   = "subnet-0eeb0d2d95485c020"
   associate_public_ip_address = true
 
   # Create and configure security group
   create_security_group      = true
-  security_group_name        = "jenkins-server-sg"
-  security_group_description = "Security group for Jenkins Server"
+  security_group_name        = "web-server-sg-01"
+  security_group_description = "Security group for Web Server"
   vpc_id                     = "vpc-0af38f56c6e9cb18c"
 
   # Allocate Elastic IP
@@ -50,13 +50,6 @@ inputs = {
       ip_protocol = "tcp"
       cidr_ipv4   = "0.0.0.0/0"
       description = "SSH access"
-    }
-    jenkins = {
-      from_port   = 8080
-      to_port     = 8080
-      ip_protocol = "tcp"
-      cidr_ipv4   = "0.0.0.0/0"
-      description = "Jenkins web interface"
     }
     http = {
       from_port   = 80
@@ -97,7 +90,7 @@ inputs = {
 
   # Tags
   tags = {
-    Name        = "qa-jenkins-server"
+    Name        = "qa-corenroll-web-ec2-01"
     Project     = "Purecode-QA"
     Owner       = "QA Team"
     Environment = local.env
